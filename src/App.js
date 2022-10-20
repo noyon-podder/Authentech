@@ -1,10 +1,15 @@
 import React from 'react'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './routes/Router'
 
 function App() {
   return (
-    <div className='flex justify-center items-center min-h-screen'>
-      <h1 className='text-3xl'>Welcome to Authentech</h1>
-    </div>
+    <>
+    <RouterProvider router={router}></RouterProvider>
+    </>
+   
+
+   
   )
 }
 

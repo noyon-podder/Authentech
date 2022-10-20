@@ -1,6 +1,40 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../contexts/UserContext';
 
 const Register = () => {
+  const {createUser, sendUserMail, updateProfileName} = useContext(AuthContext);
+
+  const handleForm = e => {
+    e.preventDefault();
+
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    //new user create 
+    createUser(email, password)
+    .then( result => {
+      toast.success('user is created!!!');
+      // user verification mail sent 
+      sendUserMail()
+      .then(() => {
+        toast.warning("Please check email. and verify your id")
+        // update profile name 
+        updateProfileName(name)
+        .then( () => {
+          toast.success('profile name updated')
+        }).catch(error => {
+          console.log(error)
+        })
+      }).catch(error => console.log(error))
+      console.log(result.user)
+    }).catch(error => {
+      toast.error(error.message);
+    })
+  }
   return (
     <div className='flex justify-center items-center pt-8'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -9,6 +43,7 @@ const Register = () => {
           <p className='text-sm text-gray-400'>Create a new account</p>
         </div>
         <form
+        onSubmit={handleForm}
           noValidate=''
           action=''
           className='space-y-12 ng-untouched ng-pristine ng-valid'
@@ -104,9 +139,9 @@ const Register = () => {
         </div>
         <p className='px-6 text-sm text-center text-gray-400'>
           Already have an account yet?{' '}
-          <a href='#' className='hover:underline text-gray-600'>
+          <Link to="/login" className='hover:underline text-gray-600'>
             Sign In
-          </a>
+          </Link>
           .
         </p>
       </div>
